@@ -1,20 +1,80 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
+import { VIEWS } from '../config';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Ruhi Donda — CS student at Rutgers building AI + space-adjacent software." />
-		<title>Ruhi Donda</title>
-	</head>
-	<body class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
-		<main class="text-center px-6">
-			<h1 class="text-4xl font-bold">Ruhi Donda</h1>
-			<p class="mt-4 text-slate-400">Launch sequence initiated — full site incoming. 🚀</p>
-		</main>
-	</body>
-</html>
+<Base
+  title="So… what are you?"
+  description="Choose your trajectory: the recruiter briefing, or a wander through everything else."
+  hideFooter
+  bodyClass="items-center justify-center"
+>
+  <!--
+    Pre-paint redirect for returning visitors. is:inline so it runs during
+    parse (no flash of the gate). Storage key must match VIEW_STORAGE_KEY
+    in src/config.ts. Skipped when the URL has ?choose so the gate is always
+    reachable for re-picking.
+  -->
+  <script is:inline slot="head">
+    try {
+      if (!location.search.includes('choose')) {
+        var v = localStorage.getItem('ruhi:view');
+        if (v === 'recruiter') location.replace('/recruiter');
+        else if (v === 'explore') location.replace('/explore');
+      }
+    } catch (e) {}
+  </script>
+
+  <main class="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 py-16 text-center">
+    <p class="mb-6 text-sm uppercase tracking-[0.35em] text-cosmic-300/80">
+      Ruhi Donda
+    </p>
+
+    <h1 class="text-gradient font-display text-[length:var(--text-hero)] leading-[var(--text-hero--line-height)] font-bold">
+      So… what are you?
+    </h1>
+
+    <p class="mt-6 max-w-md text-balance text-lg text-ink-300">
+      Pick a trajectory. You can always switch orbits later.
+    </p>
+
+    <div class="mt-12 flex w-full flex-col gap-4 sm:flex-row sm:justify-center">
+      {/* Funny alt labels to try later: "I'm hiring (or pretending to)" */}
+      <a
+        href={VIEWS.recruiter.path}
+        data-choice="recruiter"
+        class="gate-btn group relative overflow-hidden rounded-2xl bg-nebula-500 px-8 py-5 text-base font-semibold text-white transition hover:bg-nebula-400 focus-visible:outline-none sm:min-w-[15rem]"
+      >
+        <span class="relative z-10">I'm a recruiter</span>
+      </a>
+
+      {/* Funny alt labels to try later: "I'm just here to snoop" / "I'm stalking, respectfully" */}
+      <a
+        href={VIEWS.explore.path}
+        data-choice="explore"
+        class="gate-btn group relative overflow-hidden rounded-2xl border border-cosmic-400/40 bg-white/[0.02] px-8 py-5 text-base font-semibold text-ink-50 transition hover:border-cosmic-400/80 hover:bg-white/[0.05] focus-visible:outline-none sm:min-w-[15rem]"
+      >
+        <span class="relative z-10">I'm just orbiting</span>
+      </a>
+    </div>
+
+    <p class="mt-10 text-xs text-ink-500">
+      Not sure? Orbiting is lower commitment. 🛰️
+    </p>
+  </main>
+
+  <script>
+    import { VIEW_STORAGE_KEY } from '../config';
+    // Remember the visitor's choice so the gate skips straight there next time.
+    document.querySelectorAll('[data-choice]').forEach((el) => {
+      el.addEventListener('click', () => {
+        try {
+          localStorage.setItem(
+            VIEW_STORAGE_KEY,
+            el.getAttribute('data-choice'),
+          );
+        } catch {}
+      });
+    });
+  </script>
+</Base>

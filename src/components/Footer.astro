@@ -1,0 +1,26 @@
+---
+import { PROFILE, LINKS } from '../config';
+import SwitchView from './SwitchView.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-white/5">
+  <div
+    class="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="space-y-2">
+      <SwitchView />
+      <p class="text-sm text-ink-500">
+        © {year} {PROFILE.name}. Built with Astro, deployed on the edge of the
+        observable web.
+      </p>
+    </div>
+
+    <nav class="flex items-center gap-4 text-sm text-ink-300" aria-label="Social links">
+      <a href={LINKS.github} class="transition hover:text-cosmic-300" rel="me noopener" target="_blank">GitHub</a>
+      <a href={LINKS.linkedin} class="transition hover:text-cosmic-300" rel="me noopener" target="_blank">LinkedIn</a>
+      <a href={LINKS.email} class="transition hover:text-cosmic-300">Email</a>
+    </nav>
+  </div>
+</footer>

@@ -1,0 +1,108 @@
+---
+import '../styles/global.css';
+import { SITE } from '../config';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path or absolute URL to a social-share image. Defaults to site OG image. */
+  image?: string;
+  /** Set true on blog posts so OG type = article. */
+  article?: boolean;
+  /** Hide the footer (e.g. the landing gate). */
+  hideFooter?: boolean;
+  /** Extra classes on <body>. */
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = SITE.ogImage,
+  article = false,
+  hideFooter = false,
+  bodyClass = '',
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImageUrl = new URL(image, SITE.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#04050c" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content={SITE.locale} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.title} — blog`}
+      href="/rss.xml"
+    />
+
+    <!-- Page-specific head content (e.g. the gate's pre-paint redirect). -->
+    <slot name="head" />
+  </head>
+  <body class:list={['min-h-screen flex flex-col overflow-x-hidden', bodyClass]}>
+    <!-- Deep-space backdrop: fixed gradient wash (animated starfield added later). -->
+    <div class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
+      <div class="cosmic-backdrop"></div>
+    </div>
+
+    <div class="flex flex-1 flex-col">
+      <slot />
+    </div>
+
+    {!hideFooter && <Footer />}
+
+    <style>
+      .cosmic-backdrop {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 55% at 50% -10%,
+            color-mix(in oklab, var(--color-nebula-600) 22%, transparent),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 70% 60% at 85% 15%,
+            color-mix(in oklab, var(--color-cosmic-500) 12%, transparent),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 90% 70% at 10% 90%,
+            color-mix(in oklab, var(--color-nebula-500) 10%, transparent),
+            transparent 60%
+          ),
+          var(--color-space-950);
+      }
+    </style>
+  </body>
+</html>

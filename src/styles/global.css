@@ -1,1 +1,119 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import '@fontsource-variable/space-grotesk';
+
+/* ─────────────────────────────────────────────────────────────
+   Design tokens — deep-space palette + type scale.
+   Tailwind v4 reads these as utilities: bg-space-950, text-nebula-400, etc.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  /* Core space backgrounds (near-black → deep navy). */
+  --color-space-950: #04050c;
+  --color-space-900: #080a17;
+  --color-space-850: #0c0f20;
+  --color-space-800: #11152b;
+  --color-space-700: #1b2140;
+
+  /* Slate ink for text + borders. */
+  --color-ink-50: #f3f5fb;
+  --color-ink-200: #c4cae0;
+  --color-ink-300: #a3abc9;
+  --color-ink-400: #7c85a8;
+  --color-ink-500: #5b6488;
+
+  /* Nebula accents — violet/indigo primary. */
+  --color-nebula-300: #c4b5fd;
+  --color-nebula-400: #a78bfa;
+  --color-nebula-500: #8b5cf6;
+  --color-nebula-600: #7c3aed;
+
+  /* Cosmic secondary — cyan/teal for glows + highlights. */
+  --color-cosmic-300: #7dd3fc;
+  --color-cosmic-400: #38bdf8;
+  --color-cosmic-500: #0ea5e9;
+
+  /* Star accent — warm highlight for small details. */
+  --color-star-300: #fde68a;
+
+  /* Fonts. */
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+
+  /* Fluid type scale (mobile-first, clamps up on wider screens). */
+  --text-hero: clamp(2.75rem, 8vw, 5.5rem);
+  --text-hero--line-height: 1.02;
+  --text-display: clamp(2rem, 5vw, 3.5rem);
+  --text-display--line-height: 1.08;
+  --text-title: clamp(1.5rem, 3vw, 2.25rem);
+  --text-title--line-height: 1.15;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Base element styling.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-space-950);
+  color: var(--color-ink-200);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-ink-50);
+  letter-spacing: -0.02em;
+}
+
+/* Consistent, visible focus ring for keyboard users. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-cosmic-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respect reduced-motion everywhere: kill smooth scroll + animations. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reusable utilities.
+   ───────────────────────────────────────────────────────────── */
+@utility glow-nebula {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-nebula-500) 40%, transparent),
+    0 8px 40px -12px color-mix(in oklab, var(--color-nebula-500) 55%, transparent);
+}
+
+/* Gradient text helper. */
+@utility text-gradient {
+  background: linear-gradient(
+    120deg,
+    var(--color-ink-50) 0%,
+    var(--color-nebula-300) 55%,
+    var(--color-cosmic-300) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

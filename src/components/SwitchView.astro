@@ -1,0 +1,47 @@
+---
+// Lets visitors hop between the two "worlds" and updates the remembered choice
+// in localStorage so the gate keeps sending them where they last went.
+import { VIEWS, VIEW_STORAGE_KEY } from '../config';
+---
+
+<nav class="flex flex-wrap items-center gap-2 text-sm" aria-label="Switch view">
+  <span class="text-ink-500">Viewing as:</span>
+  <a
+    href={VIEWS.recruiter.path}
+    data-view="recruiter"
+    class="switch-link rounded-full px-3 py-1 text-ink-300 transition hover:text-ink-50"
+  >
+    Recruiter
+  </a>
+  <span class="text-ink-500" aria-hidden="true">·</span>
+  <a
+    href={VIEWS.explore.path}
+    data-view="explore"
+    class="switch-link rounded-full px-3 py-1 text-ink-300 transition hover:text-ink-50"
+  >
+    Just orbiting
+  </a>
+</nav>
+
+<script define:vars={{ storageKey: VIEW_STORAGE_KEY }}>
+  const path = window.location.pathname;
+  const current = path.startsWith('/recruiter')
+    ? 'recruiter'
+    : path.startsWith('/explore') || path.startsWith('/blog')
+      ? 'explore'
+      : null;
+
+  document.querySelectorAll('.switch-link').forEach((link) => {
+    const view = link.getAttribute('data-view');
+    if (view === current) {
+      link.setAttribute('aria-current', 'page');
+      link.classList.add('bg-white/5', 'text-ink-50');
+    }
+    // Remember the choice so the gate skips straight here next time.
+    link.addEventListener('click', () => {
+      try {
+        localStorage.setItem(storageKey, view);
+      } catch {}
+    });
+  });
+</script>
