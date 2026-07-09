@@ -35,6 +35,24 @@ export const LINKS = {
   email: 'mailto:Ruhidonda25@gmail.com',
 };
 
+// Education — edit/add entries here; the recruiter page renders them in order.
+export const EDUCATION = [
+  {
+    school: 'Rutgers University',
+    degree: 'B.S. Computer Science',
+    detail: 'Minor in Business Administration',
+    period: 'Class of 2027',
+    gpa: '3.559',
+  },
+];
+
+// Skills grouped by category. Add categories/items freely.
+export const SKILLS = [
+  { category: 'Languages', items: ['Python', 'JavaScript / TypeScript', 'Swift'] },
+  { category: 'Frameworks & Libraries', items: ['React', 'Next.js'] },
+  { category: 'Data & Backend', items: ['Supabase', 'SQL'] },
+];
+
 // The two "worlds" the landing gate routes into. Used by the gate + SwitchView.
 export const VIEWS = {
   recruiter: { path: '/recruiter', label: 'Recruiter view' },

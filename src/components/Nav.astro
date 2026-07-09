@@ -1,0 +1,25 @@
+---
+// Lightweight sticky header. Left: wordmark → back to the gate (re-pick).
+// Right: page-supplied links via the default slot.
+import { PROFILE } from '../config';
+---
+
+<header
+  class="sticky top-0 z-30 border-b border-white/5 bg-space-950/70 backdrop-blur-md"
+>
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
+    <a
+      href="/?choose"
+      class="group inline-flex items-center gap-2 font-display text-sm font-semibold tracking-tight text-ink-50"
+      aria-label={`${PROFILE.name} — back to start`}
+    >
+      <span
+        class="inline-block h-2 w-2 rounded-full bg-nebula-400 shadow-[0_0_10px_2px_rgba(167,139,250,0.7)] transition group-hover:bg-cosmic-400"
+      ></span>
+      {PROFILE.name}
+    </a>
+    <nav class="flex items-center gap-5 text-sm text-ink-300">
+      <slot />
+    </nav>
+  </div>
+</header>

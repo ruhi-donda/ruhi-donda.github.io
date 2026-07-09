@@ -1,15 +1,205 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { PROFILE } from '../config';
+import Nav from '../components/Nav.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Reveal from '../components/Reveal.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { PROFILE, LINKS, EDUCATION, SKILLS } from '../config';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base title="Recruiter" description={PROFILE.positioning}>
-  <main class="mx-auto max-w-5xl px-6 py-24">
-    <h1 class="font-display text-[length:var(--text-display)] font-bold text-ink-50">
-      Recruiter view
-    </h1>
-    <p class="mt-4 max-w-xl text-ink-300">
-      Coming together in Phase 3 — projects, education, and skills.
-    </p>
+  <Nav>
+    <a href="#projects" class="hidden transition hover:text-ink-50 sm:inline">Projects</a>
+    <a href="#education" class="hidden transition hover:text-ink-50 sm:inline">Education</a>
+    <a href="#skills" class="hidden transition hover:text-ink-50 sm:inline">Skills</a>
+    <a
+      href={LINKS.resume}
+      target="_blank"
+      rel="noopener"
+      class="rounded-lg border border-white/15 px-3 py-1.5 font-medium text-ink-50 transition hover:border-cosmic-400/60 hover:text-cosmic-300"
+    >
+      Résumé
+    </a>
+  </Nav>
+
+  <main class="mx-auto max-w-5xl px-6">
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section class="py-20 sm:py-28">
+      <Reveal>
+        <p class="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-cosmic-300/80">
+          {PROFILE.location}
+        </p>
+        <h1
+          class="font-display text-[length:var(--text-display)] leading-[var(--text-display--line-height)] font-bold text-ink-50"
+        >
+          {PROFILE.name}
+        </h1>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-ink-300">
+          {PROFILE.positioning}
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href={LINKS.email}
+            class="rounded-xl bg-nebula-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nebula-400"
+          >
+            Get in touch
+          </a>
+          <a
+            href={LINKS.resume}
+            target="_blank"
+            rel="noopener"
+            class="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-semibold text-ink-50 transition hover:border-cosmic-400/60 hover:text-cosmic-300"
+          >
+            Résumé (PDF)
+          </a>
+          <a
+            href={LINKS.github}
+            target="_blank"
+            rel="noopener"
+            class="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-semibold text-ink-50 transition hover:border-cosmic-400/60 hover:text-cosmic-300"
+          >
+            GitHub
+          </a>
+          <a
+            href={LINKS.linkedin}
+            target="_blank"
+            rel="noopener"
+            class="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-semibold text-ink-50 transition hover:border-cosmic-400/60 hover:text-cosmic-300"
+          >
+            LinkedIn
+          </a>
+        </div>
+      </Reveal>
+    </section>
+
+    <!-- ── Featured projects ────────────────────────────────── -->
+    <section id="projects" class="scroll-mt-20 py-12">
+      <Reveal>
+        <SectionHeading eyebrow="Selected work" title="Featured projects" />
+      </Reveal>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {
+          projects.map((project, i) => (
+            <Reveal delay={i * 60} class="h-full">
+              <ProjectCard
+                title={project.data.title}
+                summary={project.data.summary}
+                stack={project.data.stack}
+                repo={project.data.repo}
+                demo={project.data.demo}
+                writeup={project.data.writeup}
+              />
+            </Reveal>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ── Education ────────────────────────────────────────── -->
+    <section id="education" class="scroll-mt-20 py-12">
+      <Reveal>
+        <SectionHeading eyebrow="Background" title="Education" />
+      </Reveal>
+      <div class="space-y-4">
+        {
+          EDUCATION.map((ed) => (
+            <Reveal>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 class="font-display text-lg font-semibold text-ink-50">
+                    {ed.school}
+                  </h3>
+                  <span class="text-sm text-ink-400">{ed.period}</span>
+                </div>
+                <p class="mt-1 text-ink-200">{ed.degree}</p>
+                {ed.detail && <p class="text-sm text-ink-400">{ed.detail}</p>}
+                {ed.gpa && (
+                  <p class="mt-3 inline-block rounded-md border border-white/10 bg-space-800/60 px-2.5 py-1 text-sm text-ink-300">
+                    GPA {ed.gpa}
+                  </p>
+                )}
+              </div>
+            </Reveal>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ── Skills ───────────────────────────────────────────── -->
+    <section id="skills" class="scroll-mt-20 py-12">
+      <Reveal>
+        <SectionHeading eyebrow="Toolkit" title="Skills" />
+      </Reveal>
+      <div class="grid gap-5 sm:grid-cols-3">
+        {
+          SKILLS.map((group, i) => (
+            <Reveal delay={i * 60}>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-cosmic-300/90">
+                  {group.category}
+                </h3>
+                <ul class="mt-3 space-y-2">
+                  {group.items.map((item) => (
+                    <li class="text-ink-200">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         PLACEHOLDER SECTION — add experience, awards, or a
+         "currently building" block here. Delete when unused.
+         ══════════════════════════════════════════════════════ -->
+    <section id="more" class="scroll-mt-20 py-12">
+      <Reveal>
+        <div
+          class="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center"
+        >
+          <p class="text-sm uppercase tracking-[0.3em] text-ink-500">
+            Reserved airspace
+          </p>
+          <p class="mt-3 text-ink-300">
+            Room for experience, awards, or leadership — coming soon.
+          </p>
+        </div>
+      </Reveal>
+    </section>
+
+    <!-- ── Contact CTA ──────────────────────────────────────── -->
+    <section id="contact" class="scroll-mt-20 py-16 sm:py-24">
+      <Reveal>
+        <div
+          class="rounded-3xl border border-nebula-400/20 bg-gradient-to-br from-nebula-500/10 via-transparent to-cosmic-500/10 p-10 text-center"
+        >
+          <h2
+            class="font-display text-[length:var(--text-title)] font-bold text-ink-50"
+          >
+            Let's build something.
+          </h2>
+          <p class="mx-auto mt-3 max-w-md text-ink-300">
+            I'm open to internships and collaboration. The fastest way to reach
+            me is email.
+          </p>
+          <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <a
+              href={LINKS.email}
+              class="rounded-xl bg-nebula-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-nebula-400"
+            >
+              {PROFILE.email}
+            </a>
+          </div>
+        </div>
+      </Reveal>
+    </section>
   </main>
 </Base>
