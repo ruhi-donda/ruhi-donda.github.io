@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Lost in space"
+  description="This page drifted out of orbit."
+  hideFooter
+  bodyClass="items-center justify-center"
+>
+  <main class="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-6 py-16 text-center">
+    <p class="font-display text-[length:var(--text-hero)] font-bold text-gradient leading-none">
+      404
+    </p>
+    <h1 class="mt-4 font-display text-2xl font-bold text-ink-50">
+      Lost in space
+    </h1>
+    <p class="mt-4 max-w-md text-ink-300">
+      This page drifted out of orbit — or never existed in this galaxy. Let's get
+      you back to a known coordinate.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a
+        href="/"
+        class="rounded-xl bg-nebula-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nebula-400"
+      >
+        Back to start
+      </a>
+      <a
+        href="/explore"
+        class="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-semibold text-ink-50 transition hover:border-cosmic-400/60 hover:text-cosmic-300"
+      >
+        Explore instead
+      </a>
+    </div>
+  </main>
+</Base>
